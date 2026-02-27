@@ -1,61 +1,58 @@
+from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
-from fastapi import FastAPI
-from app.database import engine, Base
+from sqlalchemy.orm import Session
+from app.database import engine, Base, get_db
 import app.models as models
+
+# Creates tables in database automatically
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
 
 class NoteCreate(BaseModel):
     title: str
     content: str
 
-# This creates all tables in the database automatically
-Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
-
-# This is our fake database for now
-notes = [
-    {"id": 1, "title": "First note", "content": "Hello Notiq"},
-    {"id": 2, "title": "Second note", "content": "FastAPI is cool"},
-]
-
-@app.get("/") #this is home url
+@app.get("/")
 def root():
     return {"message": "Welcome to Notiq API"}
 
-@app.get("/notes") #thisis next to home url
-def get_all_notes():
+@app.get("/notes")
+def get_all_notes(db: Session = Depends(get_db)):
+    notes = db.query(models.Note).all()
     return notes
 
-@app.get("/notes/{id}") #going to a particular note by id
-def get_note(id:int):
-    for note in notes:
-        if note["id"]==id:
-            return note
-    return {"error": "Note not found: GM"}
+@app.get("/notes/{id}")
+def get_note(id: int, db: Session = Depends(get_db)):
+    note = db.query(models.Note).filter(models.Note.id == id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
 
 @app.post("/notes")
-def create_note(note: NoteCreate):
-    new_note = {
-        "id": len(notes) + 1,
-        "title": note.title,
-        "content": note.content
-    }
-    notes.append(new_note)
+def create_note(note: NoteCreate, db: Session = Depends(get_db)):
+    new_note = models.Note(title=note.title, content=note.content)
+    db.add(new_note)
+    db.commit()
+    db.refresh(new_note)
     return new_note
 
 @app.put("/notes/{id}")
-def update_note(id: int, note: NoteCreate):
-    for i, n in enumerate(notes):
-        if n["id"] == id:
-            notes[i]["title"] = note.title
-            notes[i]["content"] = note.content
-            return notes[i]
-    return {"error": "Note not found"}
+def update_note(id: int, note: NoteCreate, db: Session = Depends(get_db)):
+    existing_note = db.query(models.Note).filter(models.Note.id == id).first()
+    if not existing_note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    existing_note.title = note.title
+    existing_note.content = note.content
+    db.commit()
+    db.refresh(existing_note)
+    return existing_note
 
 @app.delete("/notes/{id}")
-def delete_note(id: int):
-    for i, n in enumerate(notes):
-        if n["id"] == id:
-            notes.pop(i)
-            return {"message": "Note deleted successfully"}
-    return {"error": "Note not found"}
+def delete_note(id: int, db: Session = Depends(get_db)):
+    note = db.query(models.Note).filter(models.Note.id == id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    db.delete(note)
+    db.commit()
+    return {"message": "Note deleted successfully"}
