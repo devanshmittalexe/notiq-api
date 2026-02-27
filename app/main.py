@@ -1,9 +1,14 @@
 from pydantic import BaseModel
 from fastapi import FastAPI
+from app.database import engine, Base
+import app.models as models
 
 class NoteCreate(BaseModel):
     title: str
     content: str
+
+# This creates all tables in the database automatically
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
