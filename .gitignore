@@ -1,0 +1,36 @@
+
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# Virtual Environment
+
+venv/
+.env/
+.env
+
+# Python
+*__pycache__/
+*__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite3".env" 
+".env" 
