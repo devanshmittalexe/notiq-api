@@ -7,382 +7,175 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <style>
-  /* ===== CSS VARIABLES ===== */
-  :root {
-    --bg: #080d1a;
-    --bg2: #0f1629;
-    --card: #111827;
-    --border: #1e2d4a;
-    --blue: #3b82f6;
-    --blue-dark: #2563eb;
-    --blue-glow: rgba(59,130,246,0.15);
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --shadow: 0 20px 60px rgba(0,0,0,0.4);
-  }
-  .light-mode {
-    --bg: #f0f4ff;
-    --bg2: #ffffff;
-    --card: #ffffff;
-    --border: #dde5f4;
-    --text: #0f172a;
-    --muted: #64748b;
-    --shadow: 0 20px 60px rgba(0,0,0,0.08);
-  }
+  :root { --bg:#080d1a;--bg2:#0f1629;--card:#111827;--border:#1e2d4a;--blue:#3b82f6;--blue-dark:#2563eb;--blue-glow:rgba(59,130,246,0.15);--text:#e2e8f0;--muted:#64748b;--success:#22c55e;--danger:#ef4444;--shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .light-mode { --bg:#f0f4ff;--bg2:#ffffff;--card:#ffffff;--border:#dde5f4;--text:#0f172a;--muted:#64748b;--shadow:0 20px 60px rgba(0,0,0,0.08); }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;transition:background 0.4s ease,color 0.4s ease;}
+  h1,h2,h3,.logo{font-family:'Syne',sans-serif;}
+  .mesh{background:radial-gradient(ellipse at 15% 15%,rgba(59,130,246,0.1) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(99,102,241,0.08) 0%,transparent 55%),var(--bg);transition:background 0.4s ease;}
+  .light-mode.mesh{background:radial-gradient(ellipse at 15% 15%,rgba(59,130,246,0.08) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(99,102,241,0.05) 0%,transparent 55%),var(--bg);}
+  .page{display:none;min-height:100vh;} .page.active{display:flex;}
+  .glass{background:rgba(15,22,41,0.85);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:1.5rem;transition:background 0.4s ease,border-color 0.4s ease;}
+  .light-mode .glass{background:rgba(255,255,255,0.92);}
+  .input{width:100%;padding:0.9rem 1rem 0.9rem 3rem;background:rgba(255,255,255,0.04);border:1.5px solid var(--border);border-radius:0.875rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;outline:none;transition:all 0.25s;}
+  .light-mode .input{background:rgba(0,0,0,0.03);}
+  .input:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow);}
+  .input::placeholder{color:var(--muted);}
+  .btn{width:100%;padding:0.95rem;background:var(--blue);color:white;border:none;border-radius:0.875rem;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.03em;position:relative;overflow:hidden;}
+  .btn:hover{background:var(--blue-dark);transform:translateY(-2px);box-shadow:0 10px 30px rgba(59,130,246,0.35);}
+  .btn:active{transform:translateY(0);} .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-ghost{background:rgba(255,255,255,0.05);color:var(--muted);border:1.5px solid var(--border);}
+  .btn-ghost:hover{background:rgba(255,255,255,0.08);transform:translateY(-1px);box-shadow:none;}
+  .btn-danger{background:var(--danger);} .btn-danger:hover{background:#dc2626;box-shadow:0 10px 30px rgba(239,68,68,0.3);}
+  .mascot-wrap{transition:transform 0.3s ease;} .mascot-wrap svg{filter:drop-shadow(0 8px 24px rgba(59,130,246,0.3));}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}} .mascot-idle{animation:float 3.5s ease-in-out infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.05)}60%{transform:translateY(-6px) scale(0.98)}} .mascot-happy{animation:bounce 0.6s ease forwards;}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}} .mascot-sad{animation:shake 0.5s ease forwards;}
+  .eye-group{transition:all 0.3s ease;} .hand-group{opacity:0;transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);transform:translateY(8px);}
+  .state-password .eye-group{opacity:0;transform:translateY(-8px);} .state-password .hand-group{opacity:1;transform:translateY(0);}
+  .state-email .eye-left{animation:look-left 1.8s ease-in-out infinite alternate;} .state-email .eye-right{animation:look-right 1.8s ease-in-out infinite alternate 0.1s;}
+  @keyframes look-left{0%{transform:translateX(-3px)}100%{transform:translateX(3px)}} @keyframes look-right{0%{transform:translateX(-3px)}100%{transform:translateX(3px)}}
+  .alert{padding:0.75rem 1rem;border-radius:0.625rem;font-size:0.875rem;display:none;animation:slideDown 0.2s ease;}
+  @keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .alert.show{display:flex;align-items:center;gap:0.5rem;}
+  .alert-error{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;}
+  .alert-success{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:#86efac;}
+  .navbar{background:rgba(8,13,26,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;transition:background 0.4s ease;}
+  .light-mode .navbar{background:rgba(240,244,255,0.92);}
+  .note-card{background:var(--card);border:1.5px solid var(--border);border-radius:1.125rem;padding:1.375rem;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;opacity:0;transform:translateY(16px) scale(0.97);}
+  .note-card.visible{opacity:1;transform:translateY(0) scale(1);}
+  .note-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),#818cf8);opacity:0;transition:opacity 0.2s;}
+  .note-card:hover{border-color:var(--blue);transform:translateY(-4px) scale(1.01);box-shadow:0 12px 40px rgba(59,130,246,0.15);}
+  .note-card:hover::before{opacity:1;}
+  .fab{position:fixed;bottom:2rem;right:2rem;width:3.75rem;height:3.75rem;background:var(--blue);border:none;border-radius:50%;color:white;font-size:2rem;cursor:pointer;box-shadow:0 8px 30px rgba(59,130,246,0.5);transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);display:flex;align-items:center;justify-content:center;z-index:40;}
+  .fab:hover{transform:scale(1.15) rotate(45deg);box-shadow:0 12px 40px rgba(59,130,246,0.6);}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:1rem;}
+  .modal-overlay.open{display:flex;} .modal{width:100%;max-width:520px;animation:modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+  @keyframes modalIn{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .typing-cursor{display:inline-block;width:3px;height:1.1em;background:var(--blue);margin-left:3px;border-radius:2px;animation:blink-cursor 0.8s step-end infinite;vertical-align:middle;}
+  @keyframes blink-cursor{0%,100%{opacity:1}50%{opacity:0}}
+  .confetti-piece{position:fixed;top:-10px;width:10px;height:10px;border-radius:2px;animation:confetti-fall linear forwards;z-index:9999;pointer-events:none;}
+  @keyframes confetti-fall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+  .theme-btn{width:2.5rem;height:2.5rem;border-radius:50%;border:1.5px solid var(--border);background:rgba(255,255,255,0.05);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:var(--text);}
+  .theme-btn:hover{background:rgba(255,255,255,0.1);transform:rotate(20deg);}
+  .search-wrap{position:relative;} .search-icon{position:absolute;left:0.875rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.9rem;pointer-events:none;}
+  .search-input{padding:0.6rem 1rem 0.6rem 2.5rem;background:rgba(255,255,255,0.05);border:1.5px solid var(--border);border-radius:0.75rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;width:260px;transition:all 0.2s;}
+  .light-mode .search-input{background:rgba(0,0,0,0.04);} .search-input:focus{border-color:var(--blue);width:300px;} .search-input::placeholder{color:var(--muted);}
+  .icon-btn{background:none;border:none;cursor:pointer;padding:0.45rem;border-radius:0.5rem;transition:all 0.15s;color:var(--muted);font-size:1rem;}
+  .icon-btn:hover{background:rgba(255,255,255,0.06);color:var(--text);} .icon-btn.danger:hover{background:rgba(239,68,68,0.1);color:#f87171;} .light-mode .icon-btn:hover{background:rgba(0,0,0,0.05);}
+  .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;vertical-align:middle;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  a.link{color:var(--blue);text-decoration:none;font-weight:600;cursor:pointer;} a.link:hover{text-decoration:underline;}
+  .empty{text-align:center;padding:5rem 2rem;color:var(--muted);}
+  .badge{display:inline-flex;align-items:center;padding:0.2rem 0.65rem;background:var(--blue-glow);color:var(--blue);border-radius:9999px;font-size:0.75rem;font-weight:600;}
+  textarea.input{resize:none;padding-left:1rem;} .input-no-icon{padding-left:1rem;}
+  ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:transparent;} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background 0.4s ease, color 0.4s ease;
-  }
-  h1,h2,h3,.logo { font-family: 'Syne', sans-serif; }
-
-  /* ===== MESH BG ===== */
-  .mesh {
-    background:
-      radial-gradient(ellipse at 15% 15%, rgba(59,130,246,0.1) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 85%, rgba(99,102,241,0.08) 0%, transparent 55%),
-      radial-gradient(ellipse at 50% 50%, rgba(59,130,246,0.03) 0%, transparent 70%),
-      var(--bg);
-    transition: background 0.4s ease;
-  }
-  .light-mode.mesh {
-    background:
-      radial-gradient(ellipse at 15% 15%, rgba(59,130,246,0.08) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 85%, rgba(99,102,241,0.05) 0%, transparent 55%),
-      var(--bg);
-  }
-
-  /* ===== PAGES ===== */
-  .page { display: none; min-height: 100vh; }
-  .page.active { display: flex; }
-
-  /* ===== GLASS ===== */
-  .glass {
-    background: rgba(15,22,41,0.85);
-    backdrop-filter: blur(24px);
-    border: 1px solid var(--border);
-    border-radius: 1.5rem;
-    transition: background 0.4s ease, border-color 0.4s ease;
-  }
-  .light-mode .glass {
-    background: rgba(255,255,255,0.92);
-  }
-
-  /* ===== INPUT ===== */
-  .input {
-    width: 100%;
-    padding: 0.9rem 1rem 0.9rem 3rem;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid var(--border);
-    border-radius: 0.875rem;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.25s;
-  }
-  .light-mode .input { background: rgba(0,0,0,0.03); }
-  .input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-glow); }
-  .input::placeholder { color: var(--muted); }
-
-  /* ===== BUTTON ===== */
-  .btn {
-    width: 100%; padding: 0.95rem;
-    background: var(--blue); color: white;
-    border: none; border-radius: 0.875rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    letter-spacing: 0.03em;
-    position: relative; overflow: hidden;
-  }
-  .btn::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: rgba(255,255,255,0);
-    transition: background 0.2s;
-  }
-  .btn:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59,130,246,0.35); }
-  .btn:active { transform: translateY(0); }
-  .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-  .btn-ghost { background: rgba(255,255,255,0.05); color: var(--muted); border: 1.5px solid var(--border); }
-  .btn-ghost:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); box-shadow: none; }
-  .btn-danger { background: var(--danger); }
-  .btn-danger:hover { background: #dc2626; box-shadow: 0 10px 30px rgba(239,68,68,0.3); }
-
-  /* ===== MASCOT ===== */
-  .mascot-wrap { transition: transform 0.3s ease; }
-  .mascot-wrap svg { filter: drop-shadow(0 8px 24px rgba(59,130,246,0.3)); }
-
-  /* Idle float */
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-  .mascot-idle { animation: float 3.5s ease-in-out infinite; }
-
-  /* Happy bounce */
-  @keyframes bounce { 0%,100%{transform:translateY(0) scale(1)} 30%{transform:translateY(-14px) scale(1.05)} 60%{transform:translateY(-6px) scale(0.98)} }
-  .mascot-happy { animation: bounce 0.6s ease forwards; }
-
-  /* Sad shake */
-  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
-  .mascot-sad { animation: shake 0.5s ease forwards; }
-
-  /* Thinking tilt */
-  @keyframes tilt { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-8deg)} }
-  .mascot-thinking { animation: tilt 1s ease-in-out infinite; }
-
-  /* Eye transitions */
-  .eye-group { transition: all 0.3s ease; }
-  .hand-group { opacity: 0; transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1); transform: translateY(8px); }
-  .mouth-path { transition: d 0.3s ease; }
-
-  /* Password state — cover eyes */
-  .state-password .eye-group { opacity: 0; transform: translateY(-8px); }
-  .state-password .hand-group { opacity: 1; transform: translateY(0); }
-
-  /* Email/text state — look around */
-  .state-email .eye-left { animation: look-left 1.8s ease-in-out infinite alternate; }
-  .state-email .eye-right { animation: look-right 1.8s ease-in-out infinite alternate 0.1s; }
-  @keyframes look-left { 0%{transform:translateX(-3px)} 100%{transform:translateX(3px)} }
-  @keyframes look-right { 0%{transform:translateX(-3px)} 100%{transform:translateX(3px)} }
-
-  /* Happy eyes */
-  .state-happy .eye-left, .state-happy .eye-right { animation: blink-happy 2s ease-in-out infinite; }
-  @keyframes blink-happy { 0%,90%,100%{transform:scaleY(1)} 95%{transform:scaleY(0.1)} }
-
-  /* Alert */
-  .alert {
-    padding: 0.75rem 1rem; border-radius: 0.625rem;
-    font-size: 0.875rem; display: none;
-    animation: slideDown 0.2s ease;
-  }
-  @keyframes slideDown { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
-  .alert.show { display: flex; align-items: center; gap: 0.5rem; }
-  .alert-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
-  .alert-success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
-
-  /* ===== NAVBAR ===== */
-  .navbar {
-    background: rgba(8,13,26,0.92);
-    backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 50;
-    transition: background 0.4s ease;
-  }
-  .light-mode .navbar { background: rgba(240,244,255,0.92); }
-
-  /* ===== NOTE CARDS ===== */
-  .note-card {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    border-radius: 1.125rem;
-    padding: 1.375rem;
-    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-    position: relative; overflow: hidden;
-    opacity: 0; transform: translateY(16px) scale(0.97);
-  }
-  .note-card.visible { opacity: 1; transform: translateY(0) scale(1); }
-  .note-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--blue), #818cf8);
-    opacity: 0; transition: opacity 0.2s;
-  }
-  .note-card:hover { border-color: var(--blue); transform: translateY(-4px) scale(1.01); box-shadow: 0 12px 40px rgba(59,130,246,0.15); }
-  .note-card:hover::before { opacity: 1; }
-
-  /* ===== FAB ===== */
-  .fab {
-    position: fixed; bottom: 2rem; right: 2rem;
-    width: 3.75rem; height: 3.75rem;
-    background: var(--blue); border: none; border-radius: 50%;
-    color: white; font-size: 2rem;
-    cursor: pointer;
-    box-shadow: 0 8px 30px rgba(59,130,246,0.5);
-    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 40;
-  }
-  .fab:hover { transform: scale(1.15) rotate(45deg); box-shadow: 0 12px 40px rgba(59,130,246,0.6); }
-
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65);
-    backdrop-filter: blur(6px);
-    display: none; align-items: center; justify-content: center;
-    z-index: 100; padding: 1rem;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal { width: 100%; max-width: 520px; animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
-  @keyframes modalIn { from{opacity:0;transform:scale(0.9) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
-
-  /* ===== TYPING CURSOR ===== */
-  .typing-cursor { display: inline-block; width: 3px; height: 1.1em; background: var(--blue); margin-left: 3px; border-radius: 2px; animation: blink-cursor 0.8s step-end infinite; vertical-align: middle; }
-  @keyframes blink-cursor { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  /* ===== CONFETTI ===== */
-  .confetti-piece {
-    position: fixed; top: -10px;
-    width: 10px; height: 10px;
-    border-radius: 2px;
-    animation: confetti-fall linear forwards;
-    z-index: 9999;
-    pointer-events: none;
-  }
-  @keyframes confetti-fall {
-    0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-
-  /* ===== THEME TOGGLE ===== */
-  .theme-btn {
-    width: 2.5rem; height: 2.5rem;
-    border-radius: 50%; border: 1.5px solid var(--border);
-    background: rgba(255,255,255,0.05);
-    cursor: pointer; font-size: 1.1rem;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-    color: var(--text);
-  }
-  .theme-btn:hover { background: rgba(255,255,255,0.1); transform: rotate(20deg); }
-
-  /* ===== SEARCH ===== */
-  .search-wrap { position: relative; }
-  .search-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.9rem; pointer-events: none; }
-  .search-input {
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid var(--border);
-    border-radius: 0.75rem;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem;
-    outline: none; width: 260px;
-    transition: all 0.2s;
-  }
-  .light-mode .search-input { background: rgba(0,0,0,0.04); }
-  .search-input:focus { border-color: var(--blue); width: 300px; }
-  .search-input::placeholder { color: var(--muted); }
-
-  /* ===== MISC ===== */
-  .icon-btn { background: none; border: none; cursor: pointer; padding: 0.45rem; border-radius: 0.5rem; transition: all 0.15s; color: var(--muted); font-size: 1rem; }
-  .icon-btn:hover { background: rgba(255,255,255,0.06); color: var(--text); }
-  .icon-btn.danger:hover { background: rgba(239,68,68,0.1); color: #f87171; }
-  .light-mode .icon-btn:hover { background: rgba(0,0,0,0.05); }
-
-  .spinner { width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
-  @keyframes spin { to{transform:rotate(360deg)} }
-
-  a.link { color: var(--blue); text-decoration: none; font-weight: 600; cursor: pointer; }
-  a.link:hover { text-decoration: underline; }
-
-  .empty { text-align: center; padding: 5rem 2rem; color: var(--muted); }
-  .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; background: var(--blue-glow); color: var(--blue); border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-
-  textarea.input { resize: none; padding-left: 1rem; }
-  .input-no-icon { padding-left: 1rem; }
-
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  /* SPLASH */
+  #splash{position:fixed;inset:0;z-index:9999;background:#080d1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity 0.8s ease,transform 0.8s ease;}
+  #splash.hide{opacity:0;transform:scale(1.04);pointer-events:none;}
+  .splash-logo{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:white;letter-spacing:-0.03em;}
+  .splash-logo span{color:#3b82f6;}
+  @keyframes rwalk{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}70%{transform:translateY(-5px)}}
+  #splash-robot{animation:rwalk 0.9s ease-in-out infinite;filter:drop-shadow(0 8px 32px rgba(59,130,246,0.4));}
+  .splash-bar-wrap{width:220px;height:4px;background:rgba(59,130,246,0.15);border-radius:9999px;overflow:hidden;}
+  .splash-bar{height:100%;width:0%;background:linear-gradient(90deg,#3b82f6,#818cf8);border-radius:9999px;transition:width 0.3s ease;box-shadow:0 0 10px rgba(59,130,246,0.6);}
+  .splash-status{font-family:'DM Sans',sans-serif;font-size:0.9rem;color:#64748b;text-align:center;min-height:1.5rem;}
+  .splash-dots{display:inline-flex;gap:4px;margin-left:4px;}
+  .splash-dot{width:5px;height:5px;border-radius:50%;background:#3b82f6;opacity:0.3;animation:dpulse 1.2s ease-in-out infinite;}
+  .splash-dot:nth-child(2){animation-delay:0.2s;} .splash-dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes dpulse{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+  .splash-retry{display:none;padding:0.6rem 1.5rem;background:rgba(59,130,246,0.1);border:1.5px solid rgba(59,130,246,0.3);border-radius:0.75rem;color:#3b82f6;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;}
+  .splash-retry:hover{background:rgba(59,130,246,0.2);transform:translateY(-2px);}
 </style>
 </head>
 <body class="mesh" id="body-root">
 
-<!-- ============================================================ -->
-<!--                      REGISTER PAGE                          -->
-<!-- ============================================================ -->
-<div id="page-register" class="page active flex-col items-center justify-center p-6">
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <svg id="splash-robot" width="90" height="110" viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="50" y1="2" x2="50" y2="18" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="50" cy="2" r="3.5" fill="#3b82f6"/>
+    <rect x="18" y="18" width="64" height="52" rx="15" fill="#0f1629" stroke="#3b82f6" stroke-width="2"/>
+    <rect x="10" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="82" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
+    <circle cx="38" cy="47" r="8" fill="#1e3a5f"/>
+    <circle cx="38" cy="47" r="5.5" fill="#3b82f6"/>
+    <circle cx="40" cy="45" r="2" fill="white"/>
+    <circle cx="58" cy="47" r="8" fill="#1e3a5f"/>
+    <circle cx="58" cy="47" r="5.5" fill="#3b82f6"/>
+    <circle cx="60" cy="45" r="2" fill="white"/>
+    <path d="M38 62 Q50 72 62 62" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <rect x="32" y="70" width="14" height="20" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5">
+      <animateTransform attributeName="transform" type="rotate" values="10 39 70;-10 39 70;10 39 70" dur="0.9s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="54" y="70" width="14" height="20" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5">
+      <animateTransform attributeName="transform" type="rotate" values="-10 61 70;10 61 70;-10 61 70" dur="0.9s" repeatCount="indefinite"/>
+    </rect>
+  </svg>
+  <div class="splash-logo">Not<span>iq</span></div>
+  <div class="splash-status" id="splash-status">Starting the server<span class="splash-dots"><span class="splash-dot"></span><span class="splash-dot"></span><span class="splash-dot"></span></span></div>
+  <div class="splash-bar-wrap"><div class="splash-bar" id="splash-bar"></div></div>
+  <button class="splash-retry" id="splash-retry" onclick="retrySplash()">Try Again</button>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="page-register" class="page flex-col items-center justify-center p-6">
   <div class="w-full max-w-[440px]">
     <div class="text-center mb-6">
       <div class="logo text-4xl font-extrabold text-white mb-1" style="letter-spacing:-0.02em;">Notiq</div>
       <p class="text-sm" style="color:var(--muted)">Capture ideas. Stay organised.</p>
     </div>
-
     <div class="glass p-8 shadow-2xl">
-      <!-- Mascot -->
       <div class="flex justify-center mb-5">
         <div id="reg-mascot" class="mascot-wrap mascot-idle" style="width:90px;height:90px;">
           <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-            <!-- Antenna -->
             <line x1="50" y1="2" x2="50" y2="18" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
             <circle cx="50" cy="2" r="3.5" fill="#3b82f6"/>
-            <!-- Head -->
             <rect x="18" y="18" width="64" height="52" rx="15" fill="#0f1629" stroke="#3b82f6" stroke-width="2"/>
-            <!-- Ears -->
             <rect x="10" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
             <rect x="82" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
-            <!-- Eyes group -->
             <g class="eye-group">
-              <circle cx="38" cy="47" r="8" fill="#1e3a5f"/>
-              <circle class="eye-left" cx="38" cy="47" r="5.5" fill="#3b82f6"/>
-              <circle cx="40" cy="45" r="2" fill="white"/>
-              <circle cx="39" cy="47" r="0.8" fill="white" opacity="0.6"/>
-              <circle cx="58" cy="47" r="8" fill="#1e3a5f"/>
-              <circle class="eye-right" cx="58" cy="47" r="5.5" fill="#3b82f6"/>
-              <circle cx="60" cy="45" r="2" fill="white"/>
-              <circle cx="59" cy="47" r="0.8" fill="white" opacity="0.6"/>
+              <circle cx="38" cy="47" r="8" fill="#1e3a5f"/><circle class="eye-left" cx="38" cy="47" r="5.5" fill="#3b82f6"/>
+              <circle cx="40" cy="45" r="2" fill="white"/><circle cx="39" cy="47" r="0.8" fill="white" opacity="0.6"/>
+              <circle cx="58" cy="47" r="8" fill="#1e3a5f"/><circle class="eye-right" cx="58" cy="47" r="5.5" fill="#3b82f6"/>
+              <circle cx="60" cy="45" r="2" fill="white"/><circle cx="59" cy="47" r="0.8" fill="white" opacity="0.6"/>
             </g>
-            <!-- Hands covering eyes -->
             <g class="hand-group">
               <rect x="22" y="38" width="20" height="16" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
               <rect x="58" y="38" width="20" height="16" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
-              <line x1="25" y1="43" x2="39" y2="43" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="25" y1="47" x2="39" y2="47" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="61" y1="43" x2="75" y2="43" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="61" y1="47" x2="75" y2="47" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
             </g>
-            <!-- Mouth -->
-            <path class="mouth-path" d="M38 62 Q50 70 62 62" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <!-- Bottom body hint -->
+            <path d="M38 62 Q50 70 62 62" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
             <rect x="36" y="70" width="28" height="8" rx="4" fill="#1e2d4a" opacity="0.5"/>
           </svg>
         </div>
       </div>
-
       <h1 class="text-2xl font-bold text-center mb-1" style="color:var(--text)">Create account</h1>
       <p class="text-sm text-center mb-6" style="color:var(--muted)">Start organising your thoughts</p>
-
       <div id="reg-alert" class="alert alert-error mb-4"></div>
-
       <div class="space-y-4">
         <div class="relative">
           <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);">✉️</span>
-          <input id="reg-email" class="input" type="email" placeholder="Email address"
-            onfocus="mascot('reg-mascot','email')" onblur="mascot('reg-mascot','idle')"/>
+          <input id="reg-email" class="input" type="email" placeholder="Email address" onfocus="mascot('reg-mascot','email')" onblur="mascot('reg-mascot','idle')"/>
         </div>
         <div class="relative">
           <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);">🔒</span>
-          <input id="reg-password" class="input" type="password" placeholder="Password"
-            onfocus="mascot('reg-mascot','password')" onblur="mascot('reg-mascot','idle')"/>
+          <input id="reg-password" class="input" type="password" placeholder="Password" onfocus="mascot('reg-mascot','password')" onblur="mascot('reg-mascot','idle')"/>
         </div>
         <button class="btn" id="reg-btn" onclick="doRegister()">Create Account →</button>
       </div>
-
-      <p class="text-center text-sm mt-5" style="color:var(--muted)">
-        Already have an account? <a class="link" onclick="showPage('login')">Log in</a>
-      </p>
+      <p class="text-center text-sm mt-5" style="color:var(--muted)">Already have an account? <a class="link" onclick="showPage('login')">Log in</a></p>
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!--                       LOGIN PAGE                            -->
-<!-- ============================================================ -->
+<!-- LOGIN PAGE -->
 <div id="page-login" class="page flex-col items-center justify-center p-6">
   <div class="w-full max-w-[440px]">
     <div class="text-center mb-6">
       <div class="logo text-4xl font-extrabold text-white mb-1" style="letter-spacing:-0.02em;">Notiq</div>
       <p class="text-sm" style="color:var(--muted)">Welcome back. Ready to create?</p>
     </div>
-
     <div class="glass p-8 shadow-2xl">
       <div class="flex justify-center mb-5">
         <div id="login-mascot" class="mascot-wrap mascot-idle" style="width:90px;height:90px;">
@@ -393,121 +186,79 @@
             <rect x="10" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
             <rect x="82" y="33" width="8" height="16" rx="4" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
             <g class="eye-group">
-              <circle cx="38" cy="47" r="8" fill="#1e3a5f"/>
-              <circle class="eye-left" cx="38" cy="47" r="5.5" fill="#3b82f6"/>
+              <circle cx="38" cy="47" r="8" fill="#1e3a5f"/><circle class="eye-left" cx="38" cy="47" r="5.5" fill="#3b82f6"/>
               <circle cx="40" cy="45" r="2" fill="white"/>
-              <circle cx="58" cy="47" r="8" fill="#1e3a5f"/>
-              <circle class="eye-right" cx="58" cy="47" r="5.5" fill="#3b82f6"/>
+              <circle cx="58" cy="47" r="8" fill="#1e3a5f"/><circle class="eye-right" cx="58" cy="47" r="5.5" fill="#3b82f6"/>
               <circle cx="60" cy="45" r="2" fill="white"/>
             </g>
             <g class="hand-group">
               <rect x="22" y="38" width="20" height="16" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
               <rect x="58" y="38" width="20" height="16" rx="5" fill="#1e2d4a" stroke="#3b82f6" stroke-width="1.5"/>
-              <line x1="25" y1="43" x2="39" y2="43" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="25" y1="47" x2="39" y2="47" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="61" y1="43" x2="75" y2="43" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
-              <line x1="61" y1="47" x2="75" y2="47" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
             </g>
-            <path class="mouth-path" d="M38 62 Q50 70 62 62" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M38 62 Q50 70 62 62" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
             <rect x="36" y="70" width="28" height="8" rx="4" fill="#1e2d4a" opacity="0.5"/>
           </svg>
         </div>
       </div>
-
       <h1 class="text-2xl font-bold text-center mb-1" style="color:var(--text)">Welcome back</h1>
       <p class="text-sm text-center mb-6" style="color:var(--muted)">Log in to your notes</p>
-
       <div id="login-alert" class="alert alert-error mb-4"></div>
-
       <div class="space-y-4">
         <div class="relative">
           <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);">✉️</span>
-          <input id="login-email" class="input" type="email" placeholder="Email address"
-            onfocus="mascot('login-mascot','email')" onblur="mascot('login-mascot','idle')"/>
+          <input id="login-email" class="input" type="email" placeholder="Email address" onfocus="mascot('login-mascot','email')" onblur="mascot('login-mascot','idle')"/>
         </div>
         <div class="relative">
           <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);">🔒</span>
-          <input id="login-password" class="input" type="password" placeholder="Password"
-            onfocus="mascot('login-mascot','password')" onblur="mascot('login-mascot','idle')"/>
+          <input id="login-password" class="input" type="password" placeholder="Password" onfocus="mascot('login-mascot','password')" onblur="mascot('login-mascot','idle')"/>
         </div>
         <button class="btn" id="login-btn" onclick="doLogin()">Log In →</button>
       </div>
-
-      <p class="text-center text-sm mt-5" style="color:var(--muted)">
-        Don't have an account? <a class="link" onclick="showPage('register')">Register</a>
-      </p>
+      <p class="text-center text-sm mt-5" style="color:var(--muted)">Don't have an account? <a class="link" onclick="showPage('register')">Register</a></p>
     </div>
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!--                     DASHBOARD PAGE                          -->
-<!-- ============================================================ -->
+<!-- DASHBOARD -->
 <div id="page-dashboard" class="page flex-col">
-
-  <!-- Navbar -->
   <nav class="navbar px-6 py-3.5 flex items-center justify-between gap-4">
     <span class="logo text-2xl font-extrabold" style="color:var(--text);letter-spacing:-0.02em;">Notiq</span>
-
     <div class="search-wrap hidden sm:block">
       <span class="search-icon">🔍</span>
       <input class="search-input" type="text" placeholder="Search notes..." oninput="filterNotes(this.value)"/>
     </div>
-
     <div class="flex items-center gap-3">
       <span id="dash-email" class="text-xs hidden md:block" style="color:var(--muted)"></span>
-      <!-- Theme toggle -->
       <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
-      <!-- Logout -->
-      <button onclick="doLogout()"
-        style="padding:0.5rem 1rem;border-radius:0.625rem;border:1.5px solid rgba(239,68,68,0.25);background:rgba(239,68,68,0.08);color:#f87171;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;"
-        onmouseover="this.style.background='rgba(239,68,68,0.18)'"
-        onmouseout="this.style.background='rgba(239,68,68,0.08)'">
-        Logout
-      </button>
+      <button onclick="doLogout()" style="padding:0.5rem 1rem;border-radius:0.625rem;border:1.5px solid rgba(239,68,68,0.25);background:rgba(239,68,68,0.08);color:#f87171;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.18)'" onmouseout="this.style.background='rgba(239,68,68,0.08)'">Logout</button>
     </div>
   </nav>
-
-  <!-- Content -->
   <main class="flex-1 p-6 mx-auto w-full" style="max-width:1100px;">
-    <!-- Header with typing effect -->
     <div class="mb-8 mt-2">
       <h2 class="text-3xl font-bold mb-1" style="color:var(--text);display:flex;align-items:center;gap:4px;">
-        <span id="typing-text"></span><span class="typing-cursor" id="typing-cursor"></span>
+        <span id="typing-text"></span><span class="typing-cursor"></span>
       </h2>
       <p class="text-sm" style="color:var(--muted)" id="notes-count"></p>
     </div>
-
-    <!-- Mobile search -->
     <div class="search-wrap mb-5 sm:hidden">
       <span class="search-icon">🔍</span>
       <input class="search-input" style="width:100%;max-width:100%;" type="text" placeholder="Search notes..." oninput="filterNotes(this.value)"/>
     </div>
-
-    <!-- Loading -->
     <div id="dash-loading" class="empty">
       <div class="spinner" style="width:36px;height:36px;border-width:3px;margin:0 auto 1rem;"></div>
       <p style="color:var(--muted)">Loading your notes...</p>
     </div>
-
-    <!-- Notes grid -->
     <div id="notes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style="display:none;"></div>
-
-    <!-- Empty state -->
     <div id="empty-state" class="empty" style="display:none;">
       <div style="font-size:3.5rem;margin-bottom:1rem;opacity:0.4;">📝</div>
       <h3 class="text-lg font-bold mb-2" style="color:var(--text)">No notes yet</h3>
       <p class="text-sm" style="color:var(--muted)">Tap the <strong style="color:var(--blue)">+</strong> button to write your first note!</p>
     </div>
   </main>
-
-  <!-- FAB -->
   <button class="fab" onclick="openModal()" title="New Note">+</button>
 </div>
 
-<!-- ============================================================ -->
-<!--                    CREATE / EDIT MODAL                      -->
-<!-- ============================================================ -->
+<!-- CREATE/EDIT MODAL -->
 <div id="note-modal" class="modal-overlay">
   <div class="glass modal p-7">
     <div class="flex items-center justify-between mb-5">
@@ -526,9 +277,7 @@
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!--                    DELETE CONFIRM MODAL                     -->
-<!-- ============================================================ -->
+<!-- DELETE MODAL -->
 <div id="delete-modal" class="modal-overlay">
   <div class="glass modal p-7" style="max-width:400px;">
     <div class="text-center mb-6">
@@ -543,358 +292,251 @@
   </div>
 </div>
 
-<!-- ============================================================ -->
-<!--                        JAVASCRIPT                          -->
-<!-- ============================================================ -->
 <script>
 const API = 'https://notiq-api.onrender.com';
-
 let token = localStorage.getItem('notiq_token');
 let userEmail = localStorage.getItem('notiq_email');
-let allNotes = [];
-let editingId = null;
-let deletingId = null;
-let isDark = true;
+let allNotes = [], editingId = null, deletingId = null, isDark = true;
+
+// ===== SPLASH =====
+const MSGS = ['Starting the server','Warming up the engines','Waking up the robot','Almost there','Just a few more seconds','Getting your notes ready'];
+let msgIdx = 0;
+function dots(){return '<span class="splash-dots"><span class="splash-dot"></span><span class="splash-dot"></span><span class="splash-dot"></span></span>';}
+
+async function runSplash(){
+  const bar=document.getElementById('splash-bar');
+  const status=document.getElementById('splash-status');
+  const retry=document.getElementById('splash-retry');
+  const mt=setInterval(()=>{msgIdx=(msgIdx+1)%MSGS.length;status.innerHTML=MSGS[msgIdx]+dots();},3000);
+  let p=0;
+  const bt=setInterval(()=>{if(p<85){p+=Math.random()*3;bar.style.width=Math.min(p,85)+'%';}},400);
+  const rt=setTimeout(()=>{retry.style.display='block';status.innerHTML='Taking longer than usual'+dots();},20000);
+  try{
+    await pingServer();
+    clearInterval(mt);clearInterval(bt);clearTimeout(rt);
+    bar.style.width='100%';
+    status.innerHTML='<strong style="color:#22c55e">&#10003; Ready!</strong> Let\'s go &#128640;';
+    retry.style.display='none';
+    await sleep(800);
+    const splash=document.getElementById('splash');
+    splash.classList.add('hide');
+    setTimeout(()=>{splash.style.display='none';},800);
+  }catch(e){
+    clearInterval(mt);clearInterval(bt);
+    status.innerHTML='Server seems down. Try again?';
+    retry.style.display='block';
+  }
+}
+
+async function pingServer(){
+  for(let i=0;i<30;i++){
+    try{const r=await fetch(API+'/');if(r.ok)return;}catch(e){}
+    await sleep(2000);
+  }
+  throw new Error('unreachable');
+}
+
+function retrySplash(){
+  msgIdx=0;
+  document.getElementById('splash-retry').style.display='none';
+  document.getElementById('splash-bar').style.width='0%';
+  document.getElementById('splash-status').innerHTML='Retrying'+dots();
+  runSplash();
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+setInterval(()=>{fetch(API+'/').catch(()=>{});},600000);
 
 // ===== INIT =====
-window.onload = () => {
-  const savedTheme = localStorage.getItem('notiq_theme');
-  if (savedTheme === 'light') applyTheme(false, false);
-
-  if (token) {
-    showPage('dashboard');
-    startTyping();
-    if (userEmail) document.getElementById('dash-email').textContent = userEmail;
-    loadNotes();
-  } else {
-    showPage('register');
-  }
+window.onload=async()=>{
+  if(localStorage.getItem('notiq_theme')==='light')applyTheme(false,false);
+  await runSplash();
+  if(token){showPage('dashboard');startTyping();if(userEmail)document.getElementById('dash-email').textContent=userEmail;loadNotes();}
+  else showPage('register');
 };
 
 // ===== PAGE ROUTING =====
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');}
 
 // ===== MASCOT =====
-function mascot(id, state) {
-  const el = document.getElementById(id);
-  el.className = 'mascot-wrap mascot-idle';
-  if (state === 'password') el.classList.add('state-password');
-  if (state === 'email') el.classList.add('state-email');
-  if (state === 'happy') { el.classList.remove('mascot-idle'); el.classList.add('mascot-happy'); }
-  if (state === 'sad') { el.classList.remove('mascot-idle'); el.classList.add('mascot-sad'); }
+function mascot(id,state){
+  const el=document.getElementById(id);
+  el.className='mascot-wrap mascot-idle';
+  if(state==='password')el.classList.add('state-password');
+  if(state==='email')el.classList.add('state-email');
+  if(state==='happy'){el.classList.remove('mascot-idle');el.classList.add('mascot-happy');}
+  if(state==='sad'){el.classList.remove('mascot-idle');el.classList.add('mascot-sad');}
 }
 
 // ===== THEME =====
-function toggleTheme() {
-  applyTheme(!isDark, true);
-}
-function applyTheme(dark, save) {
-  isDark = dark;
-  const body = document.getElementById('body-root');
-  const btn = document.getElementById('theme-btn');
-  if (dark) {
-    body.classList.remove('light-mode');
-    btn.textContent = '🌙';
-  } else {
-    body.classList.add('light-mode');
-    btn.textContent = '☀️';
-  }
-  if (save) localStorage.setItem('notiq_theme', dark ? 'dark' : 'light');
+function toggleTheme(){applyTheme(!isDark,true);}
+function applyTheme(dark,save){
+  isDark=dark;
+  const body=document.getElementById('body-root');
+  const btn=document.getElementById('theme-btn');
+  dark?body.classList.remove('light-mode'):body.classList.add('light-mode');
+  btn.textContent=dark?'🌙':'☀️';
+  if(save)localStorage.setItem('notiq_theme',dark?'dark':'light');
 }
 
-// ===== TYPING EFFECT =====
-const phrases = ['My Notes ✨', 'My Ideas 💡', 'My Thoughts 🧠', 'My Notes ✨'];
-let phraseIdx = 0, charIdx = 0, deleting = false;
-function startTyping() {
-  const el = document.getElementById('typing-text');
-  if (!el) return;
-  function tick() {
-    const phrase = phrases[phraseIdx];
-    if (!deleting) {
-      el.textContent = phrase.slice(0, ++charIdx);
-      if (charIdx === phrase.length) { deleting = true; setTimeout(tick, 2000); return; }
-    } else {
-      el.textContent = phrase.slice(0, --charIdx);
-      if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
-    }
-    setTimeout(tick, deleting ? 40 : 80);
+// ===== TYPING =====
+const phrases=['My Notes ✨','My Ideas 💡','My Thoughts 🧠','My Notes ✨'];
+let phraseIdx=0,charIdx=0,deleting=false;
+function startTyping(){
+  const el=document.getElementById('typing-text');
+  if(!el)return;
+  phraseIdx=0;charIdx=0;deleting=false;
+  function tick(){
+    const phrase=phrases[phraseIdx];
+    if(!deleting){el.textContent=phrase.slice(0,++charIdx);if(charIdx===phrase.length){deleting=true;setTimeout(tick,2000);return;}}
+    else{el.textContent=phrase.slice(0,--charIdx);if(charIdx===0){deleting=false;phraseIdx=(phraseIdx+1)%phrases.length;}}
+    setTimeout(tick,deleting?40:80);
   }
   tick();
 }
 
 // ===== CONFETTI =====
-function launchConfetti() {
-  const colors = ['#3b82f6','#818cf8','#34d399','#fbbf24','#f472b6','#60a5fa'];
-  for (let i = 0; i < 80; i++) {
-    setTimeout(() => {
-      const piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.left = Math.random() * 100 + 'vw';
-      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-      piece.style.width = (Math.random() * 8 + 6) + 'px';
-      piece.style.height = (Math.random() * 8 + 6) + 'px';
-      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-      piece.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-      piece.style.animationDelay = Math.random() * 0.5 + 's';
-      document.body.appendChild(piece);
-      setTimeout(() => piece.remove(), 4000);
-    }, i * 15);
+function launchConfetti(){
+  const colors=['#3b82f6','#818cf8','#34d399','#fbbf24','#f472b6','#60a5fa'];
+  for(let i=0;i<80;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='confetti-piece';
+      p.style.cssText='left:'+Math.random()*100+'vw;background:'+colors[Math.floor(Math.random()*colors.length)]+';width:'+(Math.random()*8+6)+'px;height:'+(Math.random()*8+6)+'px;border-radius:'+(Math.random()>0.5?'50%':'2px')+';animation-duration:'+(Math.random()*2+1.5)+'s;animation-delay:'+(Math.random()*0.5)+'s';
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),4000);
+    },i*15);
   }
 }
 
 // ===== ALERTS =====
-function showAlert(id, msg, type = 'error') {
-  const el = document.getElementById(id);
-  el.className = `alert alert-${type} show`;
-  el.innerHTML = (type === 'error' ? '⚠️ ' : '✅ ') + msg;
-}
-function hideAlert(id) { document.getElementById(id).classList.remove('show'); }
-
-// ===== LOADING BUTTON =====
-function setBtnLoading(id, loading, label) {
-  const btn = document.getElementById(id);
-  btn.disabled = loading;
-  btn.innerHTML = loading ? '<span class="spinner"></span>' : label;
-}
+function showAlert(id,msg,type='error'){const el=document.getElementById(id);el.className='alert alert-'+type+' show';el.innerHTML=(type==='error'?'⚠️ ':'✅ ')+msg;}
+function hideAlert(id){document.getElementById(id).classList.remove('show');}
+function setBtnLoading(id,loading,label){const btn=document.getElementById(id);btn.disabled=loading;btn.innerHTML=loading?'<span class="spinner"></span>':label;}
 
 // ===== REGISTER =====
-async function doRegister() {
+async function doRegister(){
   hideAlert('reg-alert');
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  if (!email || !password) return showAlert('reg-alert', 'Please fill in all fields.');
-  if (password.length < 6) return showAlert('reg-alert', 'Password must be at least 6 characters.');
-
-  setBtnLoading('reg-btn', true);
-  try {
-    const res = await fetch(`${API}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Registration failed');
-    mascot('reg-mascot', 'happy');
-    showAlert('reg-alert', 'Account created! Logging you in...', 'success');
-    setTimeout(() => {
-      document.getElementById('login-email').value = email;
-      document.getElementById('login-password').value = password;
-      showPage('login');
-      doLogin();
-    }, 900);
-  } catch(e) {
-    mascot('reg-mascot', 'sad');
-    setTimeout(() => mascot('reg-mascot', 'idle'), 600);
-    showAlert('reg-alert', e.message);
-    setBtnLoading('reg-btn', false, 'Create Account →');
-  }
+  const email=document.getElementById('reg-email').value.trim();
+  const password=document.getElementById('reg-password').value;
+  if(!email||!password)return showAlert('reg-alert','Please fill in all fields.');
+  if(password.length<6)return showAlert('reg-alert','Password must be at least 6 characters.');
+  setBtnLoading('reg-btn',true);
+  try{
+    const res=await fetch(API+'/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'Registration failed');
+    mascot('reg-mascot','happy');
+    showAlert('reg-alert','Account created! Logging you in...','success');
+    setTimeout(()=>{document.getElementById('login-email').value=email;document.getElementById('login-password').value=password;showPage('login');doLogin();},900);
+  }catch(e){mascot('reg-mascot','sad');setTimeout(()=>mascot('reg-mascot','idle'),600);showAlert('reg-alert',e.message);setBtnLoading('reg-btn',false,'Create Account →');}
 }
 
 // ===== LOGIN =====
-async function doLogin() {
+async function doLogin(){
   hideAlert('login-alert');
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  if (!email || !password) return showAlert('login-alert', 'Please fill in all fields.');
-
-  setBtnLoading('login-btn', true);
-  try {
-    const form = new FormData();
-    form.append('username', email);
-    form.append('password', password);
-    const res = await fetch(`${API}/auth/login`, { method: 'POST', body: form });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.detail || 'Login failed');
-
-    token = data.access_token;
-    userEmail = email;
-    localStorage.setItem('notiq_token', token);
-    localStorage.setItem('notiq_email', email);
-    document.getElementById('dash-email').textContent = email;
-
-    mascot('login-mascot', 'happy');
-    setTimeout(() => {
-      showPage('dashboard');
-      startTyping();
-      loadNotes();
-    }, 500);
-  } catch(e) {
-    mascot('login-mascot', 'sad');
-    setTimeout(() => mascot('login-mascot', 'idle'), 600);
-    showAlert('login-alert', e.message);
-    setBtnLoading('login-btn', false, 'Log In →');
-  }
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  if(!email||!password)return showAlert('login-alert','Please fill in all fields.');
+  setBtnLoading('login-btn',true);
+  try{
+    const form=new FormData();form.append('username',email);form.append('password',password);
+    const res=await fetch(API+'/auth/login',{method:'POST',body:form});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'Login failed');
+    token=data.access_token;userEmail=email;
+    localStorage.setItem('notiq_token',token);localStorage.setItem('notiq_email',email);
+    document.getElementById('dash-email').textContent=email;
+    mascot('login-mascot','happy');
+    setTimeout(()=>{showPage('dashboard');startTyping();loadNotes();},500);
+  }catch(e){mascot('login-mascot','sad');setTimeout(()=>mascot('login-mascot','idle'),600);showAlert('login-alert',e.message);setBtnLoading('login-btn',false,'Log In →');}
 }
 
 // ===== LOGOUT =====
-function doLogout() {
-  localStorage.removeItem('notiq_token');
-  localStorage.removeItem('notiq_email');
-  token = null; userEmail = null; allNotes = [];
-  charIdx = 0; deleting = false; phraseIdx = 0;
-  document.getElementById('typing-text').textContent = '';
-  document.getElementById('login-email').value = '';
-  document.getElementById('login-password').value = '';
-  hideAlert('login-alert');
-  showPage('login');
-  setBtnLoading('login-btn', false, 'Log In →');
+function doLogout(){
+  localStorage.removeItem('notiq_token');localStorage.removeItem('notiq_email');
+  token=null;userEmail=null;allNotes=[];
+  document.getElementById('typing-text').textContent='';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-password').value='';
+  hideAlert('login-alert');showPage('login');setBtnLoading('login-btn',false,'Log In →');
 }
 
 // ===== LOAD NOTES =====
-async function loadNotes() {
-  document.getElementById('dash-loading').style.display = 'block';
-  document.getElementById('notes-grid').style.display = 'none';
-  document.getElementById('empty-state').style.display = 'none';
-  try {
-    const res = await fetch(`${API}/notes`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (res.status === 401) { doLogout(); return; }
-    allNotes = await res.json();
-    renderNotes(allNotes);
-  } catch(e) {
-    document.getElementById('notes-count').textContent = 'Could not load notes.';
-  } finally {
-    document.getElementById('dash-loading').style.display = 'none';
-  }
+async function loadNotes(){
+  document.getElementById('dash-loading').style.display='block';
+  document.getElementById('notes-grid').style.display='none';
+  document.getElementById('empty-state').style.display='none';
+  try{
+    const res=await fetch(API+'/notes',{headers:{'Authorization':'Bearer '+token}});
+    if(res.status===401){doLogout();return;}
+    allNotes=await res.json();renderNotes(allNotes);
+  }catch(e){document.getElementById('notes-count').textContent='Could not load notes.';}
+  finally{document.getElementById('dash-loading').style.display='none';}
 }
 
 // ===== RENDER NOTES =====
-function renderNotes(notes) {
-  const grid = document.getElementById('notes-grid');
-  const empty = document.getElementById('empty-state');
-  const count = document.getElementById('notes-count');
-  grid.innerHTML = '';
-
-  if (notes.length === 0) {
-    empty.style.display = 'block';
-    grid.style.display = 'none';
-    count.textContent = 'No notes yet';
-    return;
-  }
-  empty.style.display = 'none';
-  grid.style.display = 'grid';
-  count.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''}`;
-
-  notes.forEach((note, i) => {
-    const card = document.createElement('div');
-    card.className = 'note-card';
-    const date = note.created_at
-      ? new Date(note.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-      : '';
-    const preview = note.content.length > 130 ? note.content.slice(0, 130) + '...' : note.content;
-    card.innerHTML = `
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.625rem;">
-        <h3 style="color:var(--text);font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;line-height:1.3;word-break:break-word;flex:1;">${esc(note.title)}</h3>
-        <div style="display:flex;gap:2px;flex-shrink:0;">
-          <button class="icon-btn" onclick="openEdit(${note.id})" title="Edit">✏️</button>
-          <button class="icon-btn danger" onclick="openDel(${note.id})" title="Delete">🗑️</button>
-        </div>
-      </div>
-      <p style="color:var(--muted);font-size:0.875rem;line-height:1.6;word-break:break-word;margin-bottom:0.875rem;">${esc(preview)}</p>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:0.75rem;color:var(--muted);">${date}</span>
-        <span class="badge">#${note.id}</span>
-      </div>
-    `;
+function renderNotes(notes){
+  const grid=document.getElementById('notes-grid');
+  const empty=document.getElementById('empty-state');
+  const count=document.getElementById('notes-count');
+  grid.innerHTML='';
+  if(!notes.length){empty.style.display='block';grid.style.display='none';count.textContent='No notes yet';return;}
+  empty.style.display='none';grid.style.display='grid';
+  count.textContent=notes.length+' note'+(notes.length!==1?'s':'');
+  notes.forEach((note,i)=>{
+    const card=document.createElement('div');card.className='note-card';
+    const date=note.created_at?new Date(note.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'';
+    const preview=note.content.length>130?note.content.slice(0,130)+'...':note.content;
+    card.innerHTML='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.625rem;"><h3 style="color:var(--text);font-family:\'Syne\',sans-serif;font-weight:700;font-size:1rem;line-height:1.3;word-break:break-word;flex:1;">'+esc(note.title)+'</h3><div style="display:flex;gap:2px;flex-shrink:0;"><button class="icon-btn" onclick="openEdit('+note.id+')" title="Edit">✏️</button><button class="icon-btn danger" onclick="openDel('+note.id+')" title="Delete">🗑️</button></div></div><p style="color:var(--muted);font-size:0.875rem;line-height:1.6;word-break:break-word;margin-bottom:0.875rem;">'+esc(preview)+'</p><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:0.75rem;color:var(--muted);">'+date+'</span><span class="badge">#'+note.id+'</span></div>';
     grid.appendChild(card);
-    // Staggered animation
-    setTimeout(() => card.classList.add('visible'), i * 60);
+    setTimeout(()=>card.classList.add('visible'),i*60);
   });
 }
 
-// ===== SEARCH / FILTER =====
-function filterNotes(q) {
-  if (!q.trim()) { renderNotes(allNotes); return; }
-  const lower = q.toLowerCase();
-  renderNotes(allNotes.filter(n =>
-    n.title.toLowerCase().includes(lower) || n.content.toLowerCase().includes(lower)
-  ));
+// ===== SEARCH =====
+function filterNotes(q){if(!q.trim()){renderNotes(allNotes);return;}const l=q.toLowerCase();renderNotes(allNotes.filter(n=>n.title.toLowerCase().includes(l)||n.content.toLowerCase().includes(l)));}
+
+// ===== MODALS =====
+function openModal(){editingId=null;document.getElementById('modal-title').textContent='New Note';document.getElementById('note-title').value='';document.getElementById('note-content').value='';document.getElementById('save-btn').textContent='Save Note';hideAlert('modal-alert');document.getElementById('note-modal').classList.add('open');setTimeout(()=>document.getElementById('note-title').focus(),100);}
+function openEdit(id){const note=allNotes.find(n=>n.id===id);if(!note)return;editingId=id;document.getElementById('modal-title').textContent='Edit Note';document.getElementById('note-title').value=note.title;document.getElementById('note-content').value=note.content;document.getElementById('save-btn').textContent='Update Note';hideAlert('modal-alert');document.getElementById('note-modal').classList.add('open');}
+function closeModal(){document.getElementById('note-modal').classList.remove('open');editingId=null;}
+
+async function saveNote(){
+  const title=document.getElementById('note-title').value.trim();
+  const content=document.getElementById('note-content').value.trim();
+  if(!title||!content)return showAlert('modal-alert','Title and content are required.');
+  const label=editingId?'Update Note':'Save Note';
+  const wasNew=!editingId;
+  setBtnLoading('save-btn',true);
+  try{
+    const url=editingId?API+'/notes/'+editingId:API+'/notes';
+    const method=editingId?'PUT':'POST';
+    const res=await fetch(url,{method,headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({title,content})});
+    if(res.status===401){doLogout();return;}
+    if(!res.ok){const d=await res.json();throw new Error(d.detail||'Save failed');}
+    closeModal();await loadNotes();
+    if(wasNew)launchConfetti();
+  }catch(e){showAlert('modal-alert',e.message);}
+  finally{setBtnLoading('save-btn',false,label);}
 }
 
-// ===== CREATE/EDIT MODAL =====
-function openModal() {
-  editingId = null;
-  document.getElementById('modal-title').textContent = 'New Note';
-  document.getElementById('note-title').value = '';
-  document.getElementById('note-content').value = '';
-  document.getElementById('save-btn').textContent = 'Save Note';
-  hideAlert('modal-alert');
-  document.getElementById('note-modal').classList.add('open');
-  setTimeout(() => document.getElementById('note-title').focus(), 100);
-}
-function openEdit(id) {
-  const note = allNotes.find(n => n.id === id);
-  if (!note) return;
-  editingId = id;
-  document.getElementById('modal-title').textContent = 'Edit Note';
-  document.getElementById('note-title').value = note.title;
-  document.getElementById('note-content').value = note.content;
-  document.getElementById('save-btn').textContent = 'Update Note';
-  hideAlert('modal-alert');
-  document.getElementById('note-modal').classList.add('open');
-}
-function closeModal() { document.getElementById('note-modal').classList.remove('open'); editingId = null; }
-
-// ===== SAVE NOTE =====
-async function saveNote() {
-  const title = document.getElementById('note-title').value.trim();
-  const content = document.getElementById('note-content').value.trim();
-  if (!title || !content) return showAlert('modal-alert', 'Title and content are required.');
-  const label = editingId ? 'Update Note' : 'Save Note';
-  setBtnLoading('save-btn', true);
-  try {
-    const url = editingId ? `${API}/notes/${editingId}` : `${API}/notes`;
-    const method = editingId ? 'PUT' : 'POST';
-    const res = await fetch(url, {
-      method,
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content })
-    });
-    if (res.status === 401) { doLogout(); return; }
-    if (!res.ok) { const d = await res.json(); throw new Error(d.detail || 'Save failed'); }
-    closeModal();
-    await loadNotes();
-    if (!editingId) launchConfetti();
-  } catch(e) {
-    showAlert('modal-alert', e.message);
-  } finally {
-    setBtnLoading('save-btn', false, label);
-  }
-}
-
-// ===== DELETE =====
-function openDel(id) { deletingId = id; document.getElementById('delete-modal').classList.add('open'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('open'); deletingId = null; }
-async function confirmDelete() {
-  if (!deletingId) return;
-  setBtnLoading('del-btn', true);
-  try {
-    const res = await fetch(`${API}/notes/${deletingId}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (res.status === 401) { doLogout(); return; }
-    closeDeleteModal();
-    await loadNotes();
-  } catch(e) { console.error(e); }
-  finally { setBtnLoading('del-btn', false, 'Delete'); }
+function openDel(id){deletingId=id;document.getElementById('delete-modal').classList.add('open');}
+function closeDeleteModal(){document.getElementById('delete-modal').classList.remove('open');deletingId=null;}
+async function confirmDelete(){
+  if(!deletingId)return;
+  setBtnLoading('del-btn',true);
+  try{const res=await fetch(API+'/notes/'+deletingId,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});if(res.status===401){doLogout();return;}closeDeleteModal();await loadNotes();}
+  catch(e){console.error(e);}
+  finally{setBtnLoading('del-btn',false,'Delete');}
 }
 
 // ===== KEYBOARD =====
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeDeleteModal(); }
-});
-document.getElementById('note-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
-document.getElementById('delete-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeDeleteModal(); });
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeDeleteModal();}});
+document.getElementById('note-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.getElementById('delete-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDeleteModal();});
 
-// ===== UTILS =====
-function esc(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
