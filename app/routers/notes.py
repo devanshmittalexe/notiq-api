@@ -78,7 +78,7 @@ def delete_note(request: Request,id:int, db:Session = Depends(get_db), current_u
   db.commit()
   return {"message": "Note moved to trash"}
 
-@router.patch("{id}/restore")
+@router.patch("/{id}/restore")
 @limiter.limit("30/minute")
 def restore_note(request: Request, id: int, db: Session = Depends(get_db), current_user : models.User= Depends(get_current_user)):
   note = db.query(models.Note).filter(
