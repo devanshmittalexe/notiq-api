@@ -23,5 +23,5 @@ class Note(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
+    deleted_at = Column(DateTime(timezone=True), nullable = True, default=None)
     owner = relationship("User", back_populates="notes")
