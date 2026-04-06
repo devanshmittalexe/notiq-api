@@ -1,0 +1,68 @@
+<svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg" width="800" height="160">
+  <defs>
+    <style>
+      .line {
+        font-family: "Fira Code", "Courier New", monospace;
+        fill: #ffffff;
+        dominant-baseline: middle;
+        text-anchor: middle;
+      }
+
+      .l1 { font-size: 30px; font-weight: 700; }
+      .l2 { font-size: 18px; }
+      .l3 { font-size: 18px; }
+
+      /* typing animations */
+      #clip1 rect {
+        animation: type1 1.5s steps(30,end) 0.2s forwards;
+      }
+
+      #clip2 rect {
+        animation: type2 1.5s steps(30,end) 2s forwards;
+      }
+
+      #clip3 rect {
+        animation: type3 1.5s steps(30,end) 3.8s forwards;
+      }
+
+      @keyframes type1 { from { width: 0 } to { width: 700px } }
+      @keyframes type2 { from { width: 0 } to { width: 700px } }
+      @keyframes type3 { from { width: 0 } to { width: 700px } }
+    </style>
+
+    <!-- clip paths -->
+    <clipPath id="clip1">
+      <rect x="50" y="0" width="0" height="60" />
+    </clipPath>
+
+    <clipPath id="clip2">
+      <rect x="50" y="58" width="0" height="44" />
+    </clipPath>
+
+    <clipPath id="clip3">
+      <rect x="50" y="102" width="0" height="44" />
+    </clipPath>
+  </defs>
+
+  <!-- Line 1 -->
+  <g clip-path="url(#clip1)">
+    <text class="line l1" x="400" y="34">
+      📝 NoteIQ — Personal Notes REST API
+    </text>
+  </g>
+
+  <!-- Line 2 -->
+  <g clip-path="url(#clip2)">
+    <text class="line l2" x="400" y="80">
+      ⚡ FastAPI · PostgreSQL · Docker · JWT Auth
+    </text>
+  </g>
+
+  <!-- Line 3 -->
+  <g clip-path="url(#clip3)">
+    <text class="line l3" x="400" y="124">
+      🚀 Production Patterns, Not Tutorial Projects
+    </text>
+  </g>
+
+</svg>
