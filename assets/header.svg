@@ -1,0 +1,120 @@
+<svg viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg" width="800" height="160">
+  <defs>
+    <style>
+      .bg { fill: none; }
+
+      /* ── shared text style ── */
+      .line {
+        font-family: "Fira Code", "Courier New", monospace;
+        fill: #6366f1;
+        dominant-baseline: middle;
+        text-anchor: middle;
+      }
+      .l1 { font-size: 30px; font-weight: 700; }
+      .l2 { font-size: 18px; fill: #818cf8; }
+      .l3 { font-size: 18px; fill: #a5b4fc; }
+
+      /* cursor */
+      .cursor {
+        fill: #6366f1;
+        animation: blink 0.75s step-end infinite;
+      }
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+      /* ── typing clip masks ── */
+      /* Line 1: reveals 0s → 1.4s */
+      #clip1 rect {
+        animation: type1 1.4s steps(28,end) 0.2s both;
+      }
+      @keyframes type1 { from{width:0} to{width:700px} }
+
+      /* Line 2: starts after l1 finishes, 0.9s type, pauses, erases */
+      #clip2 rect {
+        animation: type2 4.8s steps(1,end) 1.8s both;
+      }
+      @keyframes type2 {
+        0%   { width: 0 }
+        17%  { width: 700px }   /* typed  ~0.8s */
+        58%  { width: 700px }   /* hold   ~2s   */
+        75%  { width: 0 }       /* erased ~0.8s */
+        100% { width: 0 }
+      }
+
+      /* Line 3: starts after l2 erases */
+      #clip3 rect {
+        animation: type3 4.8s steps(1,end) 4.8s both;
+      }
+      @keyframes type3 {
+        0%   { width: 0 }
+        17%  { width: 700px }
+        58%  { width: 700px }
+        75%  { width: 0 }
+        100% { width: 0 }
+      }
+
+      /* cursor x-position chases each line */
+      .cur1 {
+        animation: cx1 1.4s steps(28,end) 0.2s both;
+      }
+      @keyframes cx1 { from{transform:translateX(-330px)} to{transform:translateX(0)} }
+
+      .cur2 {
+        animation: cx2 4.8s steps(1,end) 1.8s both, blink 0.75s step-end 1.8s infinite;
+      }
+      @keyframes cx2 {
+        0%   { opacity:0; transform:translateX(-330px) }
+        1%   { opacity:1 }
+        17%  { transform:translateX(0) }
+        58%  { transform:translateX(0) }
+        74%  { opacity:1 }
+        75%  { opacity:0; transform:translateX(-330px) }
+        100% { opacity:0 }
+      }
+
+      .cur3 {
+        animation: cx3 4.8s steps(1,end) 4.8s both, blink 0.75s step-end 4.8s infinite;
+      }
+      @keyframes cx3 {
+        0%   { opacity:0; transform:translateX(-330px) }
+        1%   { opacity:1 }
+        17%  { transform:translateX(0) }
+        58%  { transform:translateX(0) }
+        74%  { opacity:1 }
+        75%  { opacity:0; transform:translateX(-330px) }
+        100% { opacity:0 }
+      }
+    </style>
+
+    <!-- clip paths for each line -->
+    <clipPath id="clip1">
+      <rect x="50" y="0" width="0" height="60" />
+    </clipPath>
+    <clipPath id="clip2">
+      <rect x="50" y="58" width="0" height="44" />
+    </clipPath>
+    <clipPath id="clip3">
+      <rect x="50" y="102" width="0" height="44" />
+    </clipPath>
+  </defs>
+
+  <rect class="bg" width="800" height="160"/>
+
+  <!-- ── Line 1: always visible after reveal ── -->
+  <g clip-path="url(#clip1)">
+    <text class="line l1" x="400" y="34">📝 NoteIQ — Personal Notes REST API</text>
+  </g>
+  <!-- cursor for line 1 -->
+  <text class="line l1 cursor cur1" x="700" y="34">|</text>
+
+  <!-- ── Line 2 ── -->
+  <g clip-path="url(#clip2)">
+    <text class="line l2" x="400" y="80">⚡ FastAPI · PostgreSQL · Docker · JWT Auth</text>
+  </g>
+  <text class="line l2 cursor cur2" x="700" y="80">|</text>
+
+  <!-- ── Line 3 ── -->
+  <g clip-path="url(#clip3)">
+    <text class="line l3" x="400" y="124">🚀 Production Patterns, Not Tutorial Projects</text>
+  </g>
+  <text class="line l3 cursor cur3" x="700" y="124">|</text>
+</svg>
